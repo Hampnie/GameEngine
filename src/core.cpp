@@ -247,3 +247,8 @@ void Core::deleteEntity(Entity *ptr)
 {
     currentLevel->deleteEntity(ptr);
 }
+
+boost::asio::io_context& Core::get_context()
+{
+    return context;
+}

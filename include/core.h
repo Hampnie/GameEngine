@@ -4,6 +4,7 @@
 #include <SDL2/SDL.h>
 #include <glm/glm.hpp>
 #include <Box2D/Box2D.h>
+#include <boost/asio.hpp>
 
 #include <thread>
 
@@ -40,6 +41,8 @@ public:
     // Delete entity from level
     void deleteEntity(Entity* ptr);
 
+    boost::asio::io_context& get_context();
+
     glm::vec2 getWindowSize();
 private:
     Core() {}
@@ -59,6 +62,8 @@ private:
 
     Level* currentLevel;
     Level* prevLevel;
+
+    boost::asio::io_context context;
 
 //=================SHADER==================================
     ShaderProgram* shader;

@@ -2,8 +2,11 @@
 #define GAMELEVEL_H
 
 #include <vector>
-#include "level.h"
 #include <string>
+
+#include "fighter.h"
+#include "wall.h"
+#include "level.h"
 
 class b2World;
 class ShaderProgram;
@@ -11,12 +14,12 @@ class ShaderProgram;
 class GameLevel : public Level
 {
 public:
-    GameLevel() {}
+    GameLevel(std::string pathToLevel);
     virtual ~GameLevel() {}
 
     virtual void release() override {}
 
-    virtual void init(b2World* physWorld, std::string pathToLevel) override;
+    virtual void init(b2World* physWorld);
 
     virtual void input_handler(float dt) override;
 
@@ -27,6 +30,7 @@ private:
 
     float screenX, screenY;
     float cooldown;
+    std::string map;
 
     std::shared_ptr<Fighter> mainFighter;
 };

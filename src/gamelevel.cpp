@@ -2,16 +2,25 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <Box2D/Box2D.h>
+#include <sstream>
 
 #include "core.h"
 #include "input.h"
+#include "bullet.h"
 
-void GameLevel::init(b2World* physWorld, std::string pathToLevel)
+GameLevel::GameLevel(std::string pathToLevel) : map(pathToLevel) 
+{
+    glm::vec2 windowSize = Core::instance().getWindowSize();
+    screenX = windowSize.x;
+    screenY = windowSize.y;
+}
+
+void GameLevel::init(b2World* physWorld)
 {
     Level::init(physWorld);
 
     int x, y, width, height;
-    std::stringstream stream(pathToLevel);
+    std::stringstream stream(map);
 
     while(stream)
     {

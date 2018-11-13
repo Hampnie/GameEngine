@@ -6,15 +6,17 @@ set(Boost_USE_STATIC_RUNTIME OFF)
 
 project(GameEngine)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 file(GLOB SRC_LIST src/*.cpp)
 
-find_package(Boost 1.65.0 COMPONENTS filesystem thread)
-if(Boost_FOUND)
-       include_directories(${Boost_INCLUDE_DIRS})
-endif()
+#find_package(Boost 1.65.0 COMPONENTS filesystem thread system)
+#if(Boost_FOUND)
+#       include_directories(${Boost_INCLUDE_DIRS})
+#endif()
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/ext/boost/include)
 
 add_library(${PROJECT_NAME} STATIC ${SRC_LIST})
 
