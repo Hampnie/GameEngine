@@ -5,6 +5,10 @@
 #include <GL/gl.h>
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
+#include <memory>
+
+#include <string>
+#include <boost/asio.hpp>
 
 struct FRect
 {
@@ -32,6 +36,16 @@ struct bodyUserData
     body_type type;
     void* self_ptr;
     bool alive = true;
+};
+
+struct command_struct
+{
+    std::string str;
+    boost::asio::ip::tcp::socket* playerSocket;
+    command_struct(std::string str, boost::asio::ip::tcp::socket* playerSocket) :
+    str(str),
+    playerSocket(playerSocket)
+    { }
 };
 
 #endif // COMMON_H

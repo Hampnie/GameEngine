@@ -6,9 +6,6 @@
 #include <Box2D/Box2D.h>
 #include <boost/asio.hpp>
 
-#include <thread>
-
-
 #include "common.h"
 #include "entity.h"
 
@@ -29,21 +26,21 @@ public:
     // Initialize all data
     bool init(int width, int height, bool fullScreen);
     void mainloop();
-    void releaseResources();
+    void release_resources();
 
     // Create new level
-    void installLevel(Level* level);
+    void install_level(Level* level);
     // End gameloop
-    void closeGame();
+    void close_game();
 
     // Add entity to level
-    void addEntity(Entity* ptr);
+    void add_entity(Entity* ptr);
     // Delete entity from level
-    void deleteEntity(Entity* ptr);
+    void delete_entity(Entity* ptr);
 
-    boost::asio::io_context& get_context();
+    boost::asio::io_context* get_context();
 
-    glm::vec2 getWindowSize();
+    glm::vec2 get_window_size();
 private:
     Core() {}
     ~Core() {}
@@ -51,7 +48,7 @@ private:
     Core(Core const&) = delete;
     Core& operator= (Core const&) = delete;
 
-    bool createWindow(int width, int height, bool fullScreen);
+    bool create_window(int width, int height, bool fullScreen);
 
     void draw();
     void update(float deltaSeconds);
@@ -63,10 +60,11 @@ private:
     Level* currentLevel;
     Level* prevLevel;
 
-    boost::asio::io_context context;
+    boost::asio::io_context* context;
+    std::shared_ptr<boost::asio::io_context::work> work_active;
 
 //=================SHADER==================================
-    ShaderProgram* shader;
+    std::shared_ptr<ShaderProgram> shader;
     GLuint default2D_VAO, default2D_VBO, default2D_EBO;
 //=========================================================
 
@@ -76,7 +74,7 @@ private:
 
     bool loop;
 
-    b2World* physWorld;
+    std::shared_ptr<b2World> physWorld;
 };
 
 #endif

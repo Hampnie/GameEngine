@@ -22,7 +22,7 @@ class MyContactListener : public b2ContactListener
       {
           if( bud->type == bodyUserData::BT_BULLET)
           {
-             Core::instance().deleteEntity(static_cast<Entity*>(bud->self_ptr));
+             Core::instance().delete_entity(static_cast<Entity*>(bud->self_ptr));
           }
       }
 
@@ -33,7 +33,7 @@ class MyContactListener : public b2ContactListener
       {
           if( bud->type == bodyUserData::BT_BULLET)
           {
-             Core::instance().deleteEntity(static_cast<Entity*>(bud->self_ptr));
+             Core::instance().delete_entity(static_cast<Entity*>(bud->self_ptr));
           }
       }
 

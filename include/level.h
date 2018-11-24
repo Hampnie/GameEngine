@@ -13,20 +13,20 @@ public:
     Level() {}
     virtual ~Level() {}
 
-    virtual void init(b2World* physWorld)
+    virtual void init(std::shared_ptr<b2World> physWorld)
     {
         this->physWorld = physWorld;
     }
-    virtual void draw(ShaderProgram *shader);
+    virtual void draw(std::shared_ptr<ShaderProgram> shader);
 
-    void preUpdate(float dt);
+    void pre_update(float dt);
     virtual void update(float dt);
-    void postUpdate(float dt);
+    void post_update(float dt);
 
     virtual void input_handler(float dt) {}
 
-    void addEntity(Entity* ptr);
-    void deleteEntity(Entity* ptr);
+    void add_entity(Entity* ptr);
+    void delete_entity(Entity* ptr);
     
     virtual void release() = 0;
 
@@ -34,7 +34,7 @@ protected:
     virtual void send_data();
     virtual void handle_input_data();
 
-    b2World* physWorld;    
+    std::shared_ptr<b2World> physWorld;    
 
     std::vector<Entity*> activeEntities;
     std::vector<Entity*> destroyEntities;

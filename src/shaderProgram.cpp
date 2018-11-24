@@ -13,7 +13,7 @@ ShaderProgram::ShaderProgram()
     m_program = glCreateProgram();
 }
 
-void ShaderProgram::addShaderFromSourceFile(ShaderType type, const char *pathToFile)
+void ShaderProgram::add_shader_from_source_file(ShaderType type, const char *pathToFile)
 {
     std::string tmpstr;
     std::ifstream shaderFile;
@@ -80,12 +80,12 @@ void ShaderProgram::link()
     }
 }
 
-void ShaderProgram::useProgram()
+void ShaderProgram::use_program()
 {
     glUseProgram(m_program);
 }
 
-GLuint ShaderProgram::getProgram() const
+GLuint ShaderProgram::get_program() const
 {
     return m_program;
 }

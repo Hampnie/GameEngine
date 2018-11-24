@@ -13,7 +13,7 @@ public:
     Button(FRect rectangle, const std::string& norm, const std::string& press, const std::string& hover);
 
     void update(float dt);
-    void draw(ShaderProgram *shader);
+    void draw(std::shared_ptr<ShaderProgram> shader);
 
     boost::signals2::signal<void()> OnPressed;
 private:
@@ -25,7 +25,7 @@ private:
 
     glm::mat4 transform;
 
-    enum ButtonState
+    enum class ButtonState
     {
         STATE_NORMAL, STATE_HOVER, STATE_PRESS
     }state;

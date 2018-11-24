@@ -14,8 +14,8 @@ public:
         static ResourceManager theSingleInstance;
         return theSingleInstance;
     }
-    GLuint loadTexture(const char* pathToFile);
-    void releaseAllResources();
+    GLuint load_texture(const char* pathToFile);
+    void release_all_resources();
 private:
     ResourceManager() {}
     ResourceManager(const ResourceManager& root) = delete;

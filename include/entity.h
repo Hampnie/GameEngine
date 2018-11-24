@@ -9,13 +9,13 @@
 class Entity
 {
 public:
-    enum phys_body_type
+    enum class phys_body_type
     {
         STATIC,
         DYNAMIC
     };
 
-    Entity(FRect rectangle, phys_body_type phys_type, const std::string& sprite, bodyUserData::body_type bData_type, b2World* physWorld);
+    Entity(FRect rectangle, phys_body_type phys_type, const std::string& sprite, bodyUserData::body_type bData_type, std::shared_ptr<b2World> physWorld);
 
 
     virtual ~Entity()
@@ -27,7 +27,7 @@ public:
     virtual void init();
 
     virtual void update(float dt) {}
-    virtual void draw(ShaderProgram *shader) {}
+    virtual void draw(std::shared_ptr<ShaderProgram> shader) {}
 
 protected:
     b2Body *body;
@@ -36,7 +36,7 @@ protected:
     FRect rectangle;
     phys_body_type phys_type;
     bodyUserData::body_type bData_type;
-    b2World* physWorld;
+    std::shared_ptr<b2World> physWorld;
 
     enum {PHYS_MULT_FACTOR = 100};
 };

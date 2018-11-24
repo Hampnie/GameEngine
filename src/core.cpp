@@ -5,18 +5,14 @@
 #include <iostream>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include <thread>
-#include <chrono>
-
 #include "core.h"
 #include "shaderProgram.h"
 #include "resourceManager.h"
 #include "input.h"
-#include "camera.h"
 #include "level.h"
 #include "mycontactlistener.h"
 
-bool Core::createWindow(int width, int height, bool fullScreen)
+bool Core::create_window(int width, int height, bool fullScreen)
 {
     //=====================================================================
     // Init SDL and glew
@@ -57,7 +53,7 @@ bool Core::createWindow(int width, int height, bool fullScreen)
 
 bool Core::init(int width, int height, bool fullScreen)
 {
-    if(!createWindow(width, height, fullScreen))
+    if(!create_window(width, height, fullScreen))
     {
        return false; // FAIL
     }
@@ -67,19 +63,22 @@ bool Core::init(int width, int height, bool fullScreen)
 
     ResourceManager::Instance(); // Create instance of ResourceManager
 
+    context = new boost::asio::io_context();
+    work_active = std::make_shared<boost::asio::io_context::work>(*context);
+
     //mainCamera = new Camera();
 
-    shader = new ShaderProgram();
-    shader->addShaderFromSourceFile(ShaderProgram::VERTEX, "shaders/2DSprite.vert");
-    shader->addShaderFromSourceFile(ShaderProgram::FRAGMENT, "shaders/2DSprite.frag");
+    shader = std::make_shared<ShaderProgram>();
+    shader->add_shader_from_source_file(ShaderProgram::VERTEX, "shaders/2DSprite.vert");
+    shader->add_shader_from_source_file(ShaderProgram::FRAGMENT, "shaders/2DSprite.frag");
     shader->link();
-    shader->useProgram();
+    shader->use_program();
 
     view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
     ortho = glm::ortho(0.0f, float(width), (float)height, 0.0f, 0.0f, 100.0f);
 
-    shader->setMat4("view", view);
-    shader->setMat4("ortho", ortho);
+    shader->set_mat4("view", view);
+    shader->set_mat4("ortho", ortho);
 
     glEnable(GL_DEPTH_TEST);
 
@@ -118,7 +117,7 @@ bool Core::init(int width, int height, bool fullScreen)
     glBindVertexArray(0); // Unbind VAO
 
     b2Vec2 gravity(0.0f, 0.0f);
-    physWorld = new b2World(gravity);
+    physWorld = std::make_shared<b2World>(gravity);
 
     return true; // SUCCESS
 }
@@ -139,6 +138,7 @@ void Core::mainloop()
     loop = true;
     while(loop)
     {
+
         // Set frame time
         currentFrame = SDL_GetTicks() / 1000.0f;
         deltaTime = currentFrame - lastFrame;
@@ -164,12 +164,17 @@ void Core::mainloop()
                 if(event.type == SDL_QUIT )
                     loop = false;
             }
-
+            
+            
             update(deltaTime);
 
             draw();
-
+            
             physWorld->Step(maxPeriod, 8, 3);
+            
+            context->poll();
+            //context->reset();
+            //context->run();
 
             if(prevLevel)
             {
@@ -185,9 +190,9 @@ void Core::update(GLfloat dt)
 {
     Input::update(window);
 
-    currentLevel->preUpdate(dt);
+    currentLevel->pre_update(dt);
     currentLevel->update(dt);
-    currentLevel->postUpdate(dt);
+    currentLevel->post_update(dt);
 
     currentLevel->input_handler(dt);
 }
@@ -197,7 +202,7 @@ void Core::draw()
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    shader->useProgram();
+    shader->use_program();
 
     glBindVertexArray(default2D_VAO);
     currentLevel->draw(shader);    
@@ -206,7 +211,7 @@ void Core::draw()
     SDL_GL_SwapWindow(window);
 }
 
-void Core::installLevel(Level *level)
+void Core::install_level(Level *level)
 {
 
     if(currentLevel != nullptr)
@@ -218,37 +223,37 @@ void Core::installLevel(Level *level)
     currentLevel->init(physWorld);
 }
 
-void Core::releaseResources()
+void Core::release_resources()
 {
-    ResourceManager::Instance().releaseAllResources();
+    ResourceManager::Instance().release_all_resources();
     SDL_GL_DeleteContext(mainContext);
     SDL_DestroyWindow(window);
     SDL_Quit();
 }
 
-glm::vec2 Core::getWindowSize()
+glm::vec2 Core::get_window_size()
 {
     int x, y;
     SDL_GetWindowSize(window, &x, &y);
     return  glm::vec2(x, y);
 }
 
-void Core::closeGame()
+void Core::close_game()
 {
     loop = false;
 }
 
-void Core::addEntity(Entity *ptr)
+void Core::add_entity(Entity *ptr)
 {
-    currentLevel->addEntity(ptr);
+    currentLevel->add_entity(ptr);
 }
 
-void Core::deleteEntity(Entity *ptr)
+void Core::delete_entity(Entity *ptr)
 {
-    currentLevel->deleteEntity(ptr);
+    currentLevel->delete_entity(ptr);
 }
 
-boost::asio::io_context& Core::get_context()
+boost::asio::io_context* Core::get_context()
 {
     return context;
 }

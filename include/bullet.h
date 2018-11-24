@@ -7,12 +7,12 @@
 class Bullet : public Entity
 {
 public:
-    Bullet(b2World* physWorld, glm::vec2 direction, glm::vec2 position);
+    Bullet(std::shared_ptr<b2World> physWorld, glm::vec2 direction, glm::vec2 position);
 
     void init();
 
     void update(float dt);
-    void draw(ShaderProgram *shader);
+    void draw(std::shared_ptr<ShaderProgram> shader);
 
 private:
     glm::vec2 direction;

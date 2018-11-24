@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <iostream>
 
-void Level::preUpdate(float dt)
+void Level::pre_update(float dt)
 {
     handle_input_data();
 
@@ -19,7 +19,7 @@ void Level::preUpdate(float dt)
 
 }
 
-void Level::postUpdate(float dt)
+void Level::post_update(float dt)
 {
     if(!destroyEntities.empty())
     {
@@ -43,7 +43,7 @@ void Level::update(float dt)
     }
 }
 
-void Level::draw(ShaderProgram *shader)
+void Level::draw(std::shared_ptr<ShaderProgram> shader)
 {
     for(auto const& entity: activeEntities)
     {
@@ -51,12 +51,12 @@ void Level::draw(ShaderProgram *shader)
     }
 }
 
-void Level::addEntity(Entity *ptr)
+void Level::add_entity(Entity *ptr)
 {
     newEntities.push_back(ptr);
 }
 
-void Level::deleteEntity(Entity *ptr)
+void Level::delete_entity(Entity *ptr)
 {
     // Check if already contains
     if(std::find(destroyEntities.begin(), destroyEntities.end(), ptr) == destroyEntities.end()) 

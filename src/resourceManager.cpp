@@ -3,7 +3,7 @@
 
 #include <utility>
 
-GLuint ResourceManager::loadTexture(const char *pathToFile)
+GLuint ResourceManager::load_texture(const char *pathToFile)
 {
     if( all_paths.find(pathToFile) == all_paths.end())
     {
@@ -37,7 +37,7 @@ GLuint ResourceManager::loadTexture(const char *pathToFile)
     }    
 }
 
-void ResourceManager::releaseAllResources()
+void ResourceManager::release_all_resources()
 {
     
 }

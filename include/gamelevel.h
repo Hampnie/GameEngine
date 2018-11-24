@@ -1,11 +1,10 @@
 #ifndef GAMELEVEL_H
 #define GAMELEVEL_H
 
-#include <vector>
 #include <string>
+#include <vector>
 
 #include "fighter.h"
-#include "wall.h"
 #include "level.h"
 
 class b2World;
@@ -19,18 +18,20 @@ public:
 
     virtual void release() override {}
 
-    virtual void init(b2World* physWorld);
+    virtual void init(std::shared_ptr<b2World> physWorld);
 
     virtual void input_handler(float dt) override;
 
-    virtual void draw(ShaderProgram *shader) override;
+    virtual void draw(std::shared_ptr<ShaderProgram> shader) override;
 
-private:
-    void launchBullet(glm::vec2 direction);
+protected:
+    bool launch_bullet(glm::vec2 direction, bool isMainPlayer, glm::vec2 playerPosition = glm::vec2(0,0));
 
     float screenX, screenY;
     float cooldown;
     std::string map;
+
+    std::vector<Fighter*> players;
 
     std::shared_ptr<Fighter> mainFighter;
 };
