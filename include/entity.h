@@ -5,8 +5,9 @@
 #include <Box2D/Box2D.h>
 #include <iostream>
 #include "common.h"
+#include "emptyEntity.h"
 
-class Entity
+class Entity : public EmptyEntity
 {
 public:
     enum class phys_body_type
@@ -15,25 +16,19 @@ public:
         DYNAMIC
     };
 
-    Entity(FRect rectangle, phys_body_type phys_type, const std::string& sprite, bodyUserData::body_type bData_type, std::shared_ptr<b2World> physWorld);
+    Entity(FRect rectangle, std::string ID, phys_body_type phys_type, texture_type type, bodyUserData::body_type bData_type, std::shared_ptr<b2World> physWorld);
 
 
     virtual ~Entity()
     {
         physWorld->DestroyBody(body);
-        std::cout << "Entity was deleted\n";
     }
 
     virtual void init();
 
-    virtual void update(float dt) {}
-    virtual void draw(std::shared_ptr<ShaderProgram> shader) {}
-
 protected:
     b2Body *body;
 
-    GLuint sprite;
-    FRect rectangle;
     phys_body_type phys_type;
     bodyUserData::body_type bData_type;
     std::shared_ptr<b2World> physWorld;

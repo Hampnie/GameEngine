@@ -21,6 +21,8 @@ void Level::pre_update(float dt)
 
 void Level::post_update(float dt)
 {
+    send_data();
+
     if(!destroyEntities.empty())
     {
         for(auto const& entity: destroyEntities)
@@ -31,8 +33,6 @@ void Level::post_update(float dt)
         }
         destroyEntities.clear();
     }
-
-    send_data();
 }
 
 void Level::update(float dt)
@@ -51,12 +51,12 @@ void Level::draw(std::shared_ptr<ShaderProgram> shader)
     }
 }
 
-void Level::add_entity(Entity *ptr)
+void Level::add_entity(EmptyEntity *ptr)
 {
     newEntities.push_back(ptr);
 }
 
-void Level::delete_entity(Entity *ptr)
+void Level::delete_entity(EmptyEntity *ptr)
 {
     // Check if already contains
     if(std::find(destroyEntities.begin(), destroyEntities.end(), ptr) == destroyEntities.end()) 

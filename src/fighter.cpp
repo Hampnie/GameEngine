@@ -9,10 +9,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/compatibility.hpp>
 
-Fighter::Fighter(FRect rectangle, std::shared_ptr<b2World> physWorld, boost::asio::ip::tcp::socket* socket) :
-    Entity(rectangle, Entity::phys_body_type::DYNAMIC, "textures/Gun.png", bodyUserData::BT_PLAYER, physWorld),
+Fighter::Fighter(FRect rectangle, std::string ID, std::shared_ptr<b2World> physWorld, boost::asio::ip::tcp::socket* socket) :
+    Entity(rectangle, ID, Entity::phys_body_type::DYNAMIC, texture_type::Player, bodyUserData::BT_PLAYER, physWorld),
     movementSpeed(100.0f),
-    angle(0.0f),
     physWorld(physWorld),
     socket(socket)
 {
@@ -45,44 +44,6 @@ void Fighter::update(float dt)
     rectangle.y = body->GetPosition().y * PHYS_MULT_FACTOR - rectangle.height/2;
 
     body->SetTransform(body->GetPosition(), angle);
-}
-
-void Fighter::draw(std::shared_ptr<ShaderProgram> shader)
-{
-    glBindTexture(GL_TEXTURE_2D, sprite);
-
-    glm::mat4 transform;
-
-    transform = glm::translate(transform, glm::vec3(rectangle.width/2, rectangle.height/2, 0.0f));
-    transform = glm::translate(transform, glm::vec3(rectangle.x, rectangle.y, 0.0f));
-    transform = glm::scale(transform, glm::vec3(rectangle.width/2, rectangle.height/2, 0.0f));
-    transform = glm::rotate(transform, angle, glm::vec3(0.0f, 0.0f, 1.0f));
-
-    //glm::mat4 view;
-    //view = glm::translate(view, glm::vec3(-(rectangle.x + rectangle.width / 2.0f) + screenX/2, -(rectangle.y + rectangle.height / 2.0f) + screenY/2, -3.0f));
-
-    shader->set_mat4("model", transform);
-    //shader->setMat4("view", view);
-
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-}
-
-void Fighter::set_angle(float a)
-{
-    angle = a;
-}
-
-void Fighter::set_position(float x, float y)
-{
-    rectangle.x = x;
-    rectangle.y = y;
-
-    //body->SetType(b2_staticBody);
-    body->SetTransform( b2Vec2( (x + rectangle.width/2) / PHYS_MULT_FACTOR,
-                                (y + rectangle.height/2) / PHYS_MULT_FACTOR), 
-                                 1 );
-    //body->SyncTransform();
-    //body->SetType(b2_dynamicBody);    
 }
 
 void Fighter::set_true_velocity(Fighter::MOVE_DIRECTION dir)
@@ -129,12 +90,6 @@ float Fighter::get_angle()
 {
     return angle;
 }
-
-FRect Fighter::get_rect()
-{
-    return rectangle;
-}
-
 
 boost::asio::ip::tcp::socket* Fighter::get_socket()
 {

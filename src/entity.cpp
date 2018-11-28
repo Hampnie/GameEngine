@@ -1,17 +1,12 @@
 #include "entity.h"
 #include "resourceManager.h"
 
-Entity::Entity(FRect rectangle, phys_body_type phys_type, const std::string &sprite, bodyUserData::body_type bData_type, std::shared_ptr<b2World> physWorld)
-    : phys_type(phys_type),
+Entity::Entity(FRect rectangle, std::string ID, phys_body_type phys_type, texture_type type, bodyUserData::body_type bData_type, std::shared_ptr<b2World> physWorld)
+    : EmptyEntity(rectangle, type, ID),
+      phys_type(phys_type),
       bData_type(bData_type),
       physWorld(physWorld)
 {
-    this->rectangle.x = rectangle.x - rectangle.width/2;
-    this->rectangle.y = rectangle.y - rectangle.height/2;
-    this->rectangle.width = rectangle.width;
-    this->rectangle.height = rectangle.height;    
-
-    this->sprite = ResourceManager::Instance().load_texture(sprite.c_str());
 }
 
 void Entity::init()

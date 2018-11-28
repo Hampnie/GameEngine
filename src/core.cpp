@@ -170,8 +170,9 @@ void Core::mainloop()
 
             draw();
             
-            physWorld->Step(maxPeriod, 8, 3);
-            
+            if(isServer)
+                physWorld->Step(maxPeriod, 8, 3);
+
             context->poll();
             //context->reset();
             //context->run();
@@ -193,8 +194,6 @@ void Core::update(GLfloat dt)
     currentLevel->pre_update(dt);
     currentLevel->update(dt);
     currentLevel->post_update(dt);
-
-    currentLevel->input_handler(dt);
 }
 
 void Core::draw()
@@ -243,12 +242,12 @@ void Core::close_game()
     loop = false;
 }
 
-void Core::add_entity(Entity *ptr)
+void Core::add_entity(EmptyEntity *ptr)
 {
     currentLevel->add_entity(ptr);
 }
 
-void Core::delete_entity(Entity *ptr)
+void Core::delete_entity(EmptyEntity *ptr)
 {
     currentLevel->delete_entity(ptr);
 }

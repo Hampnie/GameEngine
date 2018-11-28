@@ -15,27 +15,36 @@ class MyContactListener : public b2ContactListener
     {
         std::cout << "Begin contact\n";
 
-      //check if fixture A was a bullet
-      b2Body* body = contact->GetFixtureA()->GetBody();
-      bodyUserData* bud = static_cast<bodyUserData*>(body->GetUserData());
-      if(bud)
+      // Body A data
+      b2Body* body_A = contact->GetFixtureA()->GetBody();
+      bodyUserData* bud_A = static_cast<bodyUserData*>(body_A->GetUserData());
+      // body B data
+      b2Body* body_B = contact->GetFixtureB()->GetBody();
+      bodyUserData* bud_B = static_cast<bodyUserData*>(body_B->GetUserData());
+
+      // Check if it is bullet and player
+      if(bud_A && bud_B)
       {
-          if( bud->type == bodyUserData::BT_BULLET)
+          if( ( (bud_A->type == bodyUserData::BT_BULLET) && (bud_B->type == bodyUserData::BT_PLAYER) ) ||
+              ( (bud_B->type == bodyUserData::BT_BULLET) && (bud_A->type == bodyUserData::BT_PLAYER) )  )
           {
-             Core::instance().delete_entity(static_cast<Entity*>(bud->self_ptr));
+             Core::instance().delete_entity(static_cast<EmptyEntity*>(bud_A->self_ptr));
+             Core::instance().delete_entity(static_cast<EmptyEntity*>(bud_B->self_ptr));
           }
       }
 
-      //check if fixture B was a bullet
-      body = contact->GetFixtureB()->GetBody();
-      bud = static_cast<bodyUserData*>(body->GetUserData());
-      if(bud)
+      // Check if it is bullet and wall
+
+      if( (bud_A->type == bodyUserData::BT_BULLET) && (bud_B->type == bodyUserData::BT_WALL) )
       {
-          if( bud->type == bodyUserData::BT_BULLET)
-          {
-             Core::instance().delete_entity(static_cast<Entity*>(bud->self_ptr));
-          }
+          Core::instance().delete_entity(static_cast<EmptyEntity*>(bud_A->self_ptr));
       }
+
+      if( (bud_B->type == bodyUserData::BT_BULLET) && (bud_A->type == bodyUserData::BT_WALL)) 
+      {
+          Core::instance().delete_entity(static_cast<EmptyEntity*>(bud_B->self_ptr));
+      }
+
 
     }
 

@@ -2,7 +2,7 @@
 #define LEVEL_H
 
 #include <vector>
-#include "entity.h"
+#include "emptyEntity.h"
 
 class b2World;
 class ShaderProgram;
@@ -25,8 +25,8 @@ public:
 
     virtual void input_handler(float dt) {}
 
-    void add_entity(Entity* ptr);
-    void delete_entity(Entity* ptr);
+    void add_entity(EmptyEntity* ptr);
+    void delete_entity(EmptyEntity* ptr);
     
     virtual void release() = 0;
 
@@ -36,9 +36,9 @@ protected:
 
     std::shared_ptr<b2World> physWorld;    
 
-    std::vector<Entity*> activeEntities;
-    std::vector<Entity*> destroyEntities;
-    std::vector<Entity*> newEntities;
+    std::vector<EmptyEntity*> activeEntities;
+    std::vector<EmptyEntity*> destroyEntities;
+    std::vector<EmptyEntity*> newEntities;
 };
 
 #endif

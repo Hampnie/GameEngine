@@ -22,14 +22,11 @@ enum class MOVE_DIRECTION
         STOP
     };
 
-    Fighter(FRect rectangle, std::shared_ptr<b2World> physWorld, boost::asio::ip::tcp::socket* socket = new boost::asio::ip::tcp::socket(*Core::instance().get_context()));
+    Fighter(FRect rectangle, std::string ID, std::shared_ptr<b2World> physWorld, boost::asio::ip::tcp::socket* socket = new boost::asio::ip::tcp::socket(*Core::instance().get_context()));
     ~Fighter() {}
 
     void update(float dt);
-    void draw(std::shared_ptr<ShaderProgram> shader);
 
-    void set_angle(float a);
-    void set_position(float x, float y);
     void set_true_velocity(MOVE_DIRECTION dir);
     void set_false_velocity(MOVE_DIRECTION dir);
 
@@ -40,8 +37,7 @@ enum class MOVE_DIRECTION
     void get_direction(bool& up, bool& down, bool& right, bool& left);
     void set_direction(bool up, bool down, bool right, bool left);
 
-    float get_angle();
-    FRect get_rect();     
+    float get_angle();   
 
 private:
     bool MOVE_UP = false;
@@ -49,10 +45,8 @@ private:
     bool MOVE_RIGHT = false;
     bool MOVE_LEFT = false;
 
-    float angle;
     float movementSpeed;
 
-    std::string ID = "noname";
     std::shared_ptr<b2World> physWorld;
 
     boost::asio::ip::tcp::socket* socket;

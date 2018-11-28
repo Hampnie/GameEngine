@@ -7,7 +7,7 @@
 #include <boost/asio.hpp>
 
 #include "common.h"
-#include "entity.h"
+#include "emptyEntity.h"
 
 class ShaderProgram;
 class Camera;
@@ -34,9 +34,9 @@ public:
     void close_game();
 
     // Add entity to level
-    void add_entity(Entity* ptr);
+    void add_entity(EmptyEntity* ptr);
     // Delete entity from level
-    void delete_entity(Entity* ptr);
+    void delete_entity(EmptyEntity* ptr);
 
     boost::asio::io_context* get_context();
 
@@ -52,6 +52,8 @@ private:
 
     void draw();
     void update(float deltaSeconds);
+
+    void set_isServer(bool b) {isServer = b;}
 
     SDL_Window* window;
     SDL_GLContext mainContext;
@@ -73,6 +75,7 @@ private:
     glm::mat4 ortho;
 
     bool loop;
+    bool isServer = true;
 
     std::shared_ptr<b2World> physWorld;
 };

@@ -1,19 +1,30 @@
 #include "bullet.h"
 #include <glm/gtc/matrix_transform.hpp>
 
-Bullet::Bullet(std::shared_ptr<b2World> physWorld, glm::vec2 direction, glm::vec2 position)
-    : Entity(FRect{position.x, position.y, 10.f, 10.0f}, Entity::phys_body_type::DYNAMIC, "textures/projectile.png", bodyUserData::BT_BULLET, physWorld),
-      direction(direction),
-      speed(1000.0f)
+Bullet::Bullet(std::shared_ptr<b2World> physWorld, glm::vec2 direction, Fighter* player, std::string ID)
+    : Entity::Entity(FRect{0.0f, 0.0f, 10.f, 10.0f}, ID, Entity::phys_body_type::DYNAMIC, texture_type::Bullet, bodyUserData::BT_BULLET, physWorld),
+   	  direction(direction)
 {
+	float magicAngle = player->get_angle() - 90.0f;
 
+    FRect playerRectangle = player->get_rectangle();
+    //Calculate bullet start point
+    glm::vec2 startPoint;
+    glm::vec2 playerCenter{playerRectangle.x + playerRectangle.width / 2.0f, playerRectangle.y + playerRectangle.height / 2.0f};
+    glm::vec2 bullPoint(playerRectangle.x + playerRectangle.width, playerRectangle.y - playerRectangle.height / 3.0f);
+    startPoint.x = playerCenter.x + (bullPoint.x - playerCenter.x) * cos(magicAngle) - (bullPoint.y - playerCenter.y) * sin(magicAngle);
+    startPoint.y = playerCenter.y + (bullPoint.y - playerCenter.y) * cos(magicAngle) + (bullPoint.x - playerCenter.x) * sin(magicAngle);
+    rectangle.x = startPoint.x;
+    rectangle.y = startPoint.y;
 }
 
 void Bullet::init()
 {
     Entity::init();
-    body->ApplyLinearImpulse(b2Vec2(direction.x * speed, direction.y * speed), body->GetPosition(), true);
-    //body->SetLinearVelocity(b2Vec2(direction.x * speed, direction.y * speed));
+
+    float length = std::sqrt(direction.x*direction.x + direction.y*direction.y);
+
+    body->ApplyLinearImpulse(b2Vec2((direction.x / length) * speed, (direction.y / length) * speed), body->GetPosition(), true);;
     std::cout<< "Spawn bullet\n";
 }
 
@@ -21,19 +32,10 @@ void Bullet::update(float dt)
 {
     rectangle.x = body->GetPosition().x * PHYS_MULT_FACTOR - rectangle.width/2;
     rectangle.y = body->GetPosition().y * PHYS_MULT_FACTOR - rectangle.height/2;
-}
 
-void Bullet::draw(std::shared_ptr<ShaderProgram> shader)
-{
-    glBindTexture(GL_TEXTURE_2D, sprite);
-
-    glm::mat4 transform;
-
-    transform = glm::translate(transform, glm::vec3(rectangle.width/2, rectangle.height/2, 0.0f));
-    transform = glm::translate(transform, glm::vec3(rectangle.x, rectangle.y, 0.0f));
-    transform = glm::scale(transform, glm::vec3(rectangle.width/2, rectangle.height/2, 0.0f));
-
-    shader->set_mat4("model", transform);
-
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    // If velocity too small - delete it
+    if((std::abs(body->GetLinearVelocity().x)) + (std::abs(body->GetLinearVelocity().y)) < 4)
+    {
+    	Core::instance().delete_entity(static_cast<EmptyEntity*>(this));
+    }
 }
