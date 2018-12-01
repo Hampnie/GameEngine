@@ -20,7 +20,7 @@ EmptyEntity::EmptyEntity(FRect rectangle, texture_type type, std::string ID)
             texture = ResourceManager::Instance().load_texture("textures/Gun.png");
         break;
         case texture_type::Bullet:
-            texture = ResourceManager::Instance().load_texture("textures/bullet.png");
+            texture = ResourceManager::Instance().load_texture("textures/projectile.png");
         break;
     }
 }

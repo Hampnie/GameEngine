@@ -27,8 +27,6 @@ public:
 
     void add_entity(EmptyEntity* ptr);
     void delete_entity(EmptyEntity* ptr);
-    
-    virtual void release() = 0;
 
 protected:
     virtual void send_data();

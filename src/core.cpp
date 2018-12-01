@@ -116,6 +116,9 @@ bool Core::init(int width, int height, bool fullScreen)
 
     glBindVertexArray(0); // Unbind VAO
 
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     b2Vec2 gravity(0.0f, 0.0f);
     physWorld = std::make_shared<b2World>(gravity);
 
@@ -215,7 +218,6 @@ void Core::install_level(Level *level)
 
     if(currentLevel != nullptr)
     {
-        currentLevel->release();
         prevLevel = currentLevel;
     }
     currentLevel = level;

@@ -16,7 +16,6 @@ void Level::pre_update(float dt)
         }
         newEntities.clear();
     }
-
 }
 
 void Level::post_update(float dt)
@@ -27,6 +26,8 @@ void Level::post_update(float dt)
     {
         for(auto const& entity: destroyEntities)
         {
+            if(entity->get_ID() == "Admin")
+                continue;
             // erase-remove idiom
             activeEntities.erase( std::remove( activeEntities.begin(), activeEntities.end(), entity ), activeEntities.end() );
             delete entity;
